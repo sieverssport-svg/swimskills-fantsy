@@ -1,29 +1,36 @@
 "use client";
 
-import { init } from "@telegram-apps/sdk";
-
 declare global {
   interface Window {
     Telegram?: {
-      WebApp?: any;
+      WebApp?: {
+        ready: () => void;
+        expand: () => void;
+        initDataUnsafe?: {
+          user?: {
+            id?: number;
+            username?: string;
+            first_name?: string;
+            last_name?: string;
+            photo_url?: string;
+          };
+        };
+      };
     };
   }
 }
 
 export function initTelegram() {
-  try {
-    init();
+  if (typeof window === "undefined") {
+    return null;
+  }
 
-    const tg = window.Telegram?.WebApp;
+  const tg = window.Telegram?.WebApp;
 
-    if (tg) {
-      tg.ready();
-      tg.expand();
-
-      return tg;
-    }
-  } catch (error) {
-    console.log(error);
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    return tg;
   }
 
   return null;
