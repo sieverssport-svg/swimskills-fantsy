@@ -279,7 +279,7 @@ alert(`BOUGHT → ${card.name}`);
 }
 
 return (
-<main className="min-h-screen bg-black text-white pb-32">
+<main className="min-h-screen bg-black text-white pb-32 pt-16">
 <div className="sticky top-0 z-50 bg-black border-b border-yellow-400/20 p-4 flex justify-between items-center">
 <div>
 <h1 className="text-2xl font-black text-yellow-400">Swim Skills</h1>
