@@ -126,6 +126,7 @@ return 1000;
 
 export default function Home() {
 const [opening, setOpening] = useState(false);
+const [revealing, setRevealing] = useState(false);
 const [packCards, setPackCards] = useState<Card[]>([]);
 const [collection, setCollection] = useState<CollectionItem[]>([]);
 const [marketCards, setMarketCards] = useState<MarketCard[]>([]);
@@ -144,17 +145,9 @@ const savedCollection = localStorage.getItem("swimskills_collection");
 const savedCoins = localStorage.getItem("swimskills_coins");
 const savedMarket = localStorage.getItem("swimskills_market");
 
-if (savedCollection) {
-setCollection(JSON.parse(savedCollection));
-}
-
-if (savedCoins) {
-setCoins(Number(savedCoins));
-}
-
-if (savedMarket) {
-setMarketCards(JSON.parse(savedMarket));
-}
+if (savedCollection) setCollection(JSON.parse(savedCollection));
+if (savedCoins) setCoins(Number(savedCoins));
+if (savedMarket) setMarketCards(JSON.parse(savedMarket));
 }, []);
 
 useEffect(() => {
@@ -170,7 +163,9 @@ localStorage.setItem("swimskills_market", JSON.stringify(marketCards));
 }, [marketCards]);
 
 function openPack() {
+setPackCards([]);
 setOpening(true);
+setRevealing(false);
 
 setTimeout(() => {
 const newPack = generatePack();
@@ -180,7 +175,12 @@ setCollection((prev) => addCardsToCollection(prev, newPack));
 setCoins((prev) => prev + 25);
 
 setOpening(false);
-}, 2000);
+setRevealing(true);
+
+setTimeout(() => {
+setRevealing(false);
+}, 1800);
+}, 2200);
 }
 
 function upgradeCard(card: CollectionItem) {
@@ -216,12 +216,8 @@ setCollection((prev) => {
 const updated = prev
 .map((item) => {
 if (item.id === card.id) {
-return {
-...item,
-count: item.count - 2,
-};
+return { ...item, count: item.count - 2 };
 }
-
 return item;
 })
 .filter((item) => item.count > 0);
@@ -249,12 +245,8 @@ setCollection((prev) =>
 prev
 .map((item) => {
 if (item.id === card.id) {
-return {
-...item,
-count: item.count - 1,
-};
+return { ...item, count: item.count - 1 };
 }
-
 return item;
 })
 .filter((item) => item.count > 0)
@@ -270,9 +262,7 @@ return;
 }
 
 setCoins((prev) => prev - card.price);
-
 setCollection((prev) => addCardsToCollection(prev, [card]));
-
 setMarketCards((prev) => prev.filter((_, i) => i !== index));
 
 alert(`BOUGHT → ${card.name}`);
@@ -280,60 +270,79 @@ alert(`BOUGHT → ${card.name}`);
 
 return (
 <main className="min-h-screen bg-black text-white pb-32 pt-16">
-<div className="sticky top-0 z-50 bg-black border-b border-yellow-400/20 p-4 flex justify-between items-center">
+<div className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-yellow-400/30 px-7 pt-12 pb-4 flex justify-between items-center">
 <div>
-<h1 className="text-2xl font-black text-yellow-400">Swim Skills</h1>
+<h1 className="text-3xl font-black text-yellow-400 leading-none">
+Swim Skills
+</h1>
 
-<p className="text-xs text-gray-400">
+<p className="text-sm text-gray-400 mt-2">
 {telegramUser
 ? `@${telegramUser.username || telegramUser.first_name}`
 : "Aquatic Stars 2026"}
 </p>
 </div>
 
-<div className="rounded-full border border-yellow-400 px-4 py-2 text-yellow-400 font-bold">
+<div className="rounded-full border border-yellow-400 px-6 py-3 text-yellow-400 font-black text-lg">
 {coins} SS
 </div>
 </div>
 
 {activeTab === "home" && (
-<div className="p-6">
-<div className="flex flex-col items-center justify-center min-h-[70vh]">
+<div className="px-6 pt-48">
+<div className="flex flex-col items-center justify-center min-h-[48vh]">
 {!opening ? (
 <button
 onClick={openPack}
-className="bg-yellow-400 text-black px-10 py-5 rounded-2xl text-2xl font-black hover:scale-105 transition"
+className="bg-yellow-400 text-black px-10 py-6 rounded-2xl text-2xl font-black hover:scale-105 transition shadow-[0_0_40px_rgba(250,204,21,0.4)]"
 >
 Open Starter Pack
 </button>
 ) : (
-<div className="w-72 h-[420px] rounded-3xl border-4 border-yellow-400 bg-gradient-to-b from-yellow-500 to-black shadow-[0_0_80px_rgba(250,204,21,0.8)] flex items-center justify-center animate-pulse">
+<div className="w-72 h-[420px] rounded-3xl border-4 border-yellow-400 bg-gradient-to-b from-yellow-400 via-yellow-600 to-black shadow-[0_0_90px_rgba(250,204,21,0.95)] flex items-center justify-center animate-pulse">
 <div className="text-center">
-<div className="text-6xl font-black text-black">SS</div>
-<div className="mt-6 text-2xl font-bold">OPENING...</div>
+<div className="text-7xl font-black text-black">SS</div>
+<div className="mt-6 text-2xl font-black text-white">
+OPENING...
+</div>
 </div>
 </div>
 )}
 </div>
 
+{revealing && (
+<div className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center">
+<div className="text-center">
+<div className="text-yellow-400 text-5xl font-black animate-pulse">
+PACK OPENED
+</div>
+<div className="mt-4 text-gray-300">
++25 SS added to your balance
+</div>
+</div>
+</div>
+)}
+
 {packCards.length > 0 && (
 <>
-<h2 className="text-3xl font-black text-yellow-400 mb-8 text-center">
+<h2 className="text-4xl font-black text-yellow-400 mb-8 text-center">
 Your Pack
 </h2>
 
-<div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
+<div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
 {packCards.map((card, index) => (
 <div
 key={`${card.id}-${index}`}
-className={`rounded-3xl border-4 ${card.color} overflow-hidden shadow-2xl`}
+className={`rounded-3xl border-4 ${card.color} overflow-hidden shadow-2xl bg-black animate-[fadeIn_0.6s_ease-in-out]`}
 >
 <img src={card.image} alt={card.name} className="w-full" />
 
 <div className="p-4 bg-black">
 <h3 className="font-bold text-sm">{card.name}</h3>
 <p className="text-xs text-gray-400">{card.serial}</p>
-<p className="text-xs text-yellow-300">{card.rarity}</p>
+<p className="text-xs text-yellow-300 font-bold">
+{card.rarity}
+</p>
 </div>
 </div>
 ))}
@@ -344,7 +353,7 @@ className={`rounded-3xl border-4 ${card.color} overflow-hidden shadow-2xl`}
 )}
 
 {activeTab === "collection" && (
-<div className="p-6">
+<div className="p-6 pt-48">
 <h2 className="text-4xl font-black text-yellow-400 mb-10 text-center">
 My Collection
 </h2>
@@ -354,11 +363,11 @@ My Collection
 Your collection is empty. Open a starter pack first.
 </p>
 ) : (
-<div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
+<div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
 {collection.map((card) => (
 <div
 key={card.id}
-className={`relative rounded-3xl border-4 ${card.color} overflow-hidden shadow-xl`}
+className={`relative rounded-3xl border-4 ${card.color} overflow-hidden shadow-xl bg-black`}
 >
 <img src={card.image} alt={card.name} className="w-full" />
 
@@ -369,15 +378,14 @@ x{card.count}
 <div className="p-4 bg-black">
 <h3 className="font-bold text-sm">{card.name}</h3>
 <p className="text-xs text-gray-400">{card.serial}</p>
-
-<p className="text-xs text-yellow-300 mb-4">
+<p className="text-xs text-yellow-300 mb-4 font-bold">
 {card.rarity}
 </p>
 
 {(card.rarity === "Rare" || card.rarity === "Elite") && (
 <button
 onClick={() => upgradeCard(card)}
-className="w-full bg-yellow-400 text-black py-2 rounded-lg font-bold text-sm hover:scale-105 transition"
+className="w-full bg-yellow-400 text-black py-2 rounded-lg font-bold text-sm"
 >
 Upgrade
 </button>
@@ -385,7 +393,7 @@ Upgrade
 
 <button
 onClick={() => sellCard(card)}
-className="w-full mt-2 border border-yellow-400 text-yellow-400 py-2 rounded-lg font-bold text-sm hover:bg-yellow-400 hover:text-black transition"
+className="w-full mt-2 border border-yellow-400 text-yellow-400 py-2 rounded-lg font-bold text-sm"
 >
 Sell for {getSellPrice(card.rarity)} SS
 </button>
@@ -398,7 +406,7 @@ Sell for {getSellPrice(card.rarity)} SS
 )}
 
 {activeTab === "market" && (
-<div className="p-6">
+<div className="p-6 pt-48">
 <h2 className="text-4xl font-black text-yellow-400 mb-10 text-center">
 Marketplace
 </h2>
@@ -406,19 +414,18 @@ Marketplace
 {marketCards.length === 0 ? (
 <p className="text-center text-gray-400">No cards listed yet</p>
 ) : (
-<div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
+<div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
 {marketCards.map((card, index) => (
 <div
 key={`${card.id}-${index}`}
-className={`rounded-3xl border-4 ${card.color} overflow-hidden shadow-xl`}
+className={`rounded-3xl border-4 ${card.color} overflow-hidden shadow-xl bg-black`}
 >
 <img src={card.image} alt={card.name} className="w-full" />
 
 <div className="p-4 bg-black">
 <h3 className="font-bold text-sm">{card.name}</h3>
 <p className="text-xs text-gray-400">{card.serial}</p>
-
-<p className="text-xs text-yellow-300 mb-4">
+<p className="text-xs text-yellow-300 mb-4 font-bold">
 {card.rarity}
 </p>
 
@@ -428,7 +435,7 @@ className={`rounded-3xl border-4 ${card.color} overflow-hidden shadow-xl`}
 
 <button
 onClick={() => buyCard(card, index)}
-className="w-full bg-yellow-400 text-black py-2 rounded-lg font-bold text-sm hover:scale-105 transition"
+className="w-full bg-yellow-400 text-black py-2 rounded-lg font-bold text-sm"
 >
 Buy
 </button>
@@ -440,10 +447,10 @@ Buy
 </div>
 )}
 
-<div className="fixed bottom-0 left-0 right-0 bg-black border-t border-yellow-400/20 p-4 flex justify-around">
+<div className="fixed bottom-0 left-0 right-0 bg-black border-t border-yellow-400/30 p-4 flex justify-around z-50">
 <button
 onClick={() => setActiveTab("home")}
-className={`font-bold ${
+className={`font-black ${
 activeTab === "home" ? "text-yellow-400" : "text-gray-500"
 }`}
 >
@@ -452,7 +459,7 @@ HOME
 
 <button
 onClick={() => setActiveTab("collection")}
-className={`font-bold ${
+className={`font-black ${
 activeTab === "collection" ? "text-yellow-400" : "text-gray-500"
 }`}
 >
@@ -461,7 +468,7 @@ COLLECTION
 
 <button
 onClick={() => setActiveTab("market")}
-className={`font-bold ${
+className={`font-black ${
 activeTab === "market" ? "text-yellow-400" : "text-gray-500"
 }`}
 >
