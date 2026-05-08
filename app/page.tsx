@@ -23,6 +23,81 @@ price: number;
 
 type Tab = "home" | "collection" | "market" | "news";
 
+type Lang = "en" | "ru";
+
+declare global {
+interface Window {
+Telegram?: {
+WebApp?: {
+ready?: () => void;
+expand?: () => void;
+initDataUnsafe?: {
+user?: {
+language_code?: string;
+};
+};
+};
+};
+}
+}
+
+const dictionary = {
+en: {
+username: "@whoissievers",
+currency: "SS",
+yourPack: "Your Pack",
+openPack: "Open Pack",
+swipeCards: "← swipe cards →",
+swipeCollection: "← swipe collection →",
+swipeMarket: "← swipe market →",
+premiumVault: "PREMIUM VAULT",
+myCollection: "My Collection",
+cardsOwned: "Cards owned",
+unique: "Unique",
+market: "Market",
+newsTitle: "Swim Skills News",
+newsText:
+"Latest swimming news, records, NCAA stories and fantasy league updates.",
+openTelegram: "Open Telegram Channel",
+home: "Home",
+collection: "Collection",
+news: "News",
+buy: "Buy",
+sell: "Sell",
+upgrade: "Upgrade",
+alreadyGoat: "Already GOAT",
+needDuplicates: "Need 2 duplicates",
+notEnough: "Not enough SS",
+},
+ru: {
+username: "@whoissievers",
+currency: "SS",
+yourPack: "Твой пак",
+openPack: "Открыть пак",
+swipeCards: "← листай карточки →",
+swipeCollection: "← листай коллекцию →",
+swipeMarket: "← листай маркет →",
+premiumVault: "ПРЕМИУМ ХРАНИЛИЩЕ",
+myCollection: "Моя коллекция",
+cardsOwned: "Карточек",
+unique: "Уникальных",
+market: "Маркет",
+newsTitle: "Swim Skills News",
+newsText:
+"Новости плавания, рекорды, NCAA, мировые старты и обновления Fantasy League.",
+openTelegram: "Открыть Telegram-канал",
+home: "Главная",
+collection: "Коллекция",
+news: "Новости",
+buy: "Купить",
+sell: "Продать",
+upgrade: "Улучшить",
+alreadyGoat: "Карточка уже GOAT",
+needDuplicates: "Нужно 2 дубликата",
+notEnough: "Недостаточно SS",
+},
+};
+
 const marketCards: MarketCard[] = [
 {
 id: "summer",
@@ -89,13 +164,32 @@ if (rarity === "Elite") return "GOAT";
 return null;
 }
 
+function getTelegramLanguage(): Lang {
+if (typeof window === "undefined") return "en";
+
+const code =
+window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code || "en";
+
+if (code.startsWith("ru")) return "ru";
+
+return "en";
+}
+
 export default function Home() {
+const [lang, setLang] = useState<Lang>("en");
 const [balance, setBalance] = useState(1675);
 const [collection, setCollection] = useState<CollectionItem[]>([]);
 const [activeTab, setActiveTab] = useState<Tab>("home");
 const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
+const t = dictionary[lang];
+
 useEffect(() => {
+window.Telegram?.WebApp?.ready?.();
+window.Telegram?.WebApp?.expand?.();
+
+setLang(getTelegramLanguage());
+
 const savedCollection = localStorage.getItem("collection");
 const savedBalance = localStorage.getItem("balance");
 
@@ -146,17 +240,17 @@ const nextRarity = getNextRarity(card.rarity);
 const cost = getUpgradeCost(card.rarity);
 
 if (!nextRarity) {
-alert("Already GOAT");
+alert(t.alreadyGoat);
 return;
 }
 
 if (card.count < 2) {
-alert("Need 2 duplicates");
+alert(t.needDuplicates);
 return;
 }
 
 if (balance < cost) {
-alert("Not enough SS");
+alert(t.notEnough);
 return;
 }
 
@@ -470,23 +564,23 @@ color: #ffcc00;
 <div className="topbar">
 <div>
 <h1 className="brand-title">Swim Skills</h1>
-<div className="username">@whoissievers</div>
+<div className="username">{t.username}</div>
 </div>
 
 <div className="balance">
 {balance}
 <br />
-SS
+{t.currency}
 </div>
 </div>
 
 {activeTab === "home" && (
 <div className="screen">
 <div className="pack-header">
-<h2 className="section-title">Your Pack</h2>
+<h2 className="section-title">{t.yourPack}</h2>
 
 <button className="pack-button" onClick={openStarterPack}>
-Open Pack
+{t.openPack}
 </button>
 </div>
 
@@ -495,21 +589,22 @@ cards={collection}
 setSelectedCard={setSelectedCard}
 sellCard={sellCard}
 upgradeCard={upgradeCard}
+t={t}
 />
 
-<div className="swipe-hint">← swipe cards →</div>
+<div className="swipe-hint">{t.swipeCards}</div>
 </div>
 )}
 
 {activeTab === "collection" && (
 <div className="screen">
 <div className="vault">
-<p className="vault-kicker">PREMIUM VAULT</p>
+<p className="vault-kicker">{t.premiumVault}</p>
 
-<h2 className="vault-title">My Collection</h2>
+<h2 className="vault-title">{t.myCollection}</h2>
 
 <p className="vault-subtitle">
-Cards owned: {totalCards} · Unique: {collection.length}
+{t.cardsOwned}: {totalCards} · {t.unique}: {collection.length}
 </p>
 </div>
 
@@ -518,16 +613,17 @@ cards={collection}
 setSelectedCard={setSelectedCard}
 sellCard={sellCard}
 upgradeCard={upgradeCard}
+t={t}
 />
 
-<div className="swipe-hint">← swipe collection →</div>
+<div className="swipe-hint">{t.swipeCollection}</div>
 </div>
 )}
 
 {activeTab === "market" && (
 <div className="screen">
 <div className="pack-header">
-<h2 className="section-title">Market</h2>
+<h2 className="section-title">{t.market}</h2>
 </div>
 
 <div className="scroll-row">
@@ -552,7 +648,7 @@ onClick={(e) => {
 e.stopPropagation();
 
 if (balance < card.price) {
-alert("Not enough SS");
+alert(t.notEnough);
 return;
 }
 
@@ -560,29 +656,26 @@ setBalance((prev) => prev - card.price);
 addCardToCollection(card);
 }}
 >
-Buy · {card.price} SS
+{t.buy} · {card.price} {t.currency}
 </button>
 </div>
 </div>
 ))}
 </div>
 
-<div className="swipe-hint">← swipe market →</div>
+<div className="swipe-hint">{t.swipeMarket}</div>
 </div>
 )}
 
 {activeTab === "news" && (
 <div className="screen">
 <div className="news-card">
-<h2 className="news-title">Swim Skills News</h2>
+<h2 className="news-title">{t.newsTitle}</h2>
 
-<p className="news-text">
-Latest swimming news, records, NCAA stories and fantasy league
-updates.
-</p>
+<p className="news-text">{t.newsText}</p>
 
 <button className="pack-button" onClick={openTelegramNews}>
-Open Telegram Channel
+{t.openTelegram}
 </button>
 </div>
 </div>
@@ -608,7 +701,7 @@ tab="home"
 activeTab={activeTab}
 setActiveTab={setActiveTab}
 icon="⌂"
-label="Home"
+label={t.home}
 />
 
 <NavButton
@@ -616,7 +709,7 @@ tab="collection"
 activeTab={activeTab}
 setActiveTab={setActiveTab}
 icon="▥"
-label="Collection"
+label={t.collection}
 />
 
 <NavButton
@@ -624,7 +717,7 @@ tab="market"
 activeTab={activeTab}
 setActiveTab={setActiveTab}
 icon="🛒"
-label="Market"
+label={t.market}
 />
 
 <NavButton
@@ -632,7 +725,7 @@ tab="news"
 activeTab={activeTab}
 setActiveTab={setActiveTab}
 icon="▤"
-label="News"
+label={t.news}
 />
 </div>
 </div>
@@ -644,11 +737,13 @@ cards,
 setSelectedCard,
 sellCard,
 upgradeCard,
+t,
 }: {
 cards: CollectionItem[];
 setSelectedCard: (card: Card) => void;
 sellCard: (card: CollectionItem) => void;
 upgradeCard: (card: CollectionItem) => void;
+t: typeof dictionary.en;
 }) {
 return (
 <div className="scroll-row">
@@ -676,7 +771,7 @@ e.stopPropagation();
 upgradeCard(card);
 }}
 >
-Upgrade
+{t.upgrade}
 </button>
 
 <button
@@ -686,7 +781,7 @@ e.stopPropagation();
 sellCard(card);
 }}
 >
-Sell · {getSellPrice(card.rarity)} SS
+{t.sell} · {getSellPrice(card.rarity)} {t.currency}
 </button>
 </div>
 </div>
