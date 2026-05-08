@@ -23,20 +23,10 @@ type MarketCard = Card & {
 price: number;
 };
 
-type Tournament = {
-id: string;
-title: string;
-location: string;
-dates: string;
-status: "liveSoon" | "comingSoon";
-prize: string;
-color: string;
-};
-
 type LegendSlot = {
 id: string;
 name: string;
-image?: string;
+country: string;
 };
 
 type TelegramWindow = Window & {
@@ -59,80 +49,62 @@ username: "@whoissievers",
 currency: "SS",
 yourPack: "Your Pack",
 openPack: "Open Pack",
-swipeCards: "← swipe cards →",
-swipeCollection: "← swipe collection →",
-swipeMarket: "← swipe market →",
-premiumVault: "PREMIUM VAULT",
-myCollection: "My Collection",
-cardsOwned: "Cards owned",
-unique: "Unique",
-market: "Market",
 home: "Home",
 collection: "Collection",
+market: "Market",
 tournament: "Tournament",
 buy: "Buy",
 sell: "Sell",
 upgrade: "Upgrade",
-alreadyGoat: "Already GOAT",
-alreadyLegend: "Already Legend",
-needDuplicates: "Need 2 duplicates",
 notEnough: "Not enough SS",
+needDuplicates: "Need 2 duplicates",
+alreadyLegend: "Already Legend",
+premiumVault: "PREMIUM VAULT",
+myCollection: "My Collection",
+cardsOwned: "Cards owned",
+unique: "Unique",
+hallTitle: "Hall of Fame Women",
+hallText: "Legend cards are awarded to tournament winners. Unlock them and place them into the Hall of Fame.",
+locked: "Locked",
+unlocked: "Unlocked",
+addToHall: "Add to Hall of Fame",
+inHall: "In Hall of Fame",
 tournamentsTitle: "Fantasy Tournaments",
-tournamentsText:
-"Choose upcoming competitions, enter with your team and compete in Swim Skills Fantasy League.",
+tournamentsText: "Choose upcoming competitions, enter with your team and compete in Swim Skills Fantasy League.",
 enterTeam: "Enter with team",
 comingSoon: "Coming soon",
 liveSoon: "Registration open",
-prizePool: "Prize pool",
-dates: "Dates",
-location: "Location",
-hallOfFameWomen: "Hall of Fame Women",
-hallText:
-"Legend cards are awarded to tournament winners. Add them to the Hall of Fame after receiving them.",
-locked: "Locked",
-addToHall: "Add to Hall of Fame",
-inHall: "In Hall of Fame",
-legendPrize: "Legend prize",
 },
 ru: {
 username: "@whoissievers",
 currency: "SS",
 yourPack: "Твой пак",
 openPack: "Открыть пак",
-swipeCards: "← листай карточки →",
-swipeCollection: "← листай коллекцию →",
-swipeMarket: "← листай маркет →",
-premiumVault: "ПРЕМИУМ ХРАНИЛИЩЕ",
-myCollection: "Моя коллекция",
-cardsOwned: "Карточек",
-unique: "Уникальных",
-market: "Маркет",
 home: "Главная",
 collection: "Коллекция",
+market: "Маркет",
 tournament: "Турнир",
 buy: "Купить",
 sell: "Продать",
 upgrade: "Улучшить",
-alreadyGoat: "Карточка уже GOAT",
-alreadyLegend: "Карточка уже Legend",
-needDuplicates: "Нужно 2 дубликата",
 notEnough: "Недостаточно SS",
+needDuplicates: "Нужно 2 дубликата",
+alreadyLegend: "Уже Legend",
+premiumVault: "ПРЕМИУМ ХРАНИЛИЩЕ",
+myCollection: "Моя коллекция",
+cardsOwned: "Карточек",
+unique: "Уникальных",
+hallTitle: "Hall of Fame Women",
+hallText: "Карточки Legend получают победители турниров. Открой легенду и добавь её в Зал славы.",
+locked: "Закрыто",
+unlocked: "Открыто",
+addToHall: "Добавить в Зал славы",
+inHall: "В Зале славы",
 tournamentsTitle: "Фентези-турниры",
-tournamentsText:
-"Выбирай ближайшие соревнования, заявляй свою команду и участвуй в Swim Skills Fantasy League.",
+tournamentsText: "Выбирай соревнования, заявляй команду и участвуй в Swim Skills Fantasy League.",
 enterTeam: "Войти командой",
 comingSoon: "Скоро",
 liveSoon: "Регистрация открыта",
-prizePool: "Призовой фонд",
-dates: "Даты",
-location: "Локация",
-hallOfFameWomen: "Зал славы Women",
-hallText:
-"Карточки Legend получают победители турниров. После получения их можно добавить в Зал славы.",
-locked: "Закрыто",
-addToHall: "Добавить в Зал славы",
-inHall: "В Зале славы",
-legendPrize: "Приз Legend",
 },
 };
 
@@ -185,51 +157,21 @@ price: 220,
 ];
 
 const legendWomen: LegendSlot[] = [
-{ id: "missy-franklin", name: "Missy Franklin" },
-{ id: "federica-pellegrini", name: "Federica Pellegrini" },
-{ id: "laure-manaudou", name: "Laure Manaudou" },
-{ id: "rebecca-soni", name: "Rebecca Soni" },
-{ id: "inge-de-bruijn", name: "Inge De Bruijn" },
-{ id: "natalie-coughlin", name: "Natalie Coughlin" },
-{ id: "emma-mckeon", name: "Emma McKeon" },
-{ id: "katinka-hosszu", name: "Katinka Hosszu" },
-{ id: "cate-campbell", name: "Cate Campbell" },
-{ id: "ariarne-titmus", name: "Ariarne Titmus" },
-{ id: "ye-shiwen", name: "Ye Shiwen" },
-{ id: "kirsty-coventry", name: "Kirsty Coventry" },
-{ id: "tatiana-schoenmaker", name: "Tatiana Schoenmaker" },
-{ id: "ranomi-kromowidjojo", name: "Ranomi Kromowidjojo" },
-{ id: "leisel-jones", name: "Leisel Jones" },
-];
-
-const tournaments: Tournament[] = [
-{
-id: "world-cup",
-title: "World Cup Fantasy",
-location: "World Aquatics",
-dates: "October 2026",
-status: "liveSoon",
-prize: "10 000 SS + Legend Card",
-color: "#ffcc00",
-},
-{
-id: "ncaa",
-title: "NCAA Championship",
-location: "USA",
-dates: "March 2026",
-status: "comingSoon",
-prize: "7 500 SS + Legend Card",
-color: "#4da3ff",
-},
-{
-id: "euro",
-title: "European Aquatics",
-location: "Europe",
-dates: "Summer 2026",
-status: "comingSoon",
-prize: "5 000 SS + Legend Card",
-color: "#3fbf6f",
-},
+{ id: "missy-franklin", name: "Missy Franklin", country: "USA" },
+{ id: "federica-pellegrini", name: "Federica Pellegrini", country: "ITA" },
+{ id: "laure-manaudou", name: "Laure Manaudou", country: "FRA" },
+{ id: "rebecca-soni", name: "Rebecca Soni", country: "USA" },
+{ id: "inge-de-bruijn", name: "Inge De Bruijn", country: "NED" },
+{ id: "natalie-coughlin", name: "Natalie Coughlin", country: "USA" },
+{ id: "emma-mckeon", name: "Emma McKeon", country: "AUS" },
+{ id: "katinka-hosszu", name: "Katinka Hosszu", country: "HUN" },
+{ id: "cate-campbell", name: "Cate Campbell", country: "AUS" },
+{ id: "ariarne-titmus", name: "Ariarne Titmus", country: "AUS" },
+{ id: "ye-shiwen", name: "Ye Shiwen", country: "CHN" },
+{ id: "kirsty-coventry", name: "Kirsty Coventry", country: "ZIM" },
+{ id: "tatiana-schoenmaker", name: "Tatiana Schoenmaker", country: "RSA" },
+{ id: "ranomi-kromowidjojo", name: "Ranomi Kromowidjojo", country: "NED" },
+{ id: "leisel-jones", name: "Leisel Jones", country: "AUS" },
 ];
 
 function getSellPrice(rarity: Rarity) {
@@ -255,14 +197,10 @@ return null;
 
 function getTelegramLanguage(): Lang {
 if (typeof window === "undefined") return "en";
-
 const tgWindow = window as TelegramWindow;
-
 const code =
 tgWindow.Telegram?.WebApp?.initDataUnsafe?.user?.language_code || "en";
-
-if (code.startsWith("ru")) return "ru";
-return "en";
+return code.startsWith("ru") ? "ru" : "en";
 }
 
 export default function Home() {
@@ -277,7 +215,6 @@ const t = dictionary[lang];
 
 useEffect(() => {
 const tgWindow = window as TelegramWindow;
-
 tgWindow.Telegram?.WebApp?.ready?.();
 tgWindow.Telegram?.WebApp?.expand?.();
 
@@ -301,13 +238,11 @@ localStorage.setItem("hallOfFameWomen", JSON.stringify(hallOfFame));
 const addCardToCollection = (card: Card) => {
 setCollection((prev) => {
 const existing = prev.find((c) => c.id === card.id);
-
 if (existing) {
 return prev.map((c) =>
 c.id === card.id ? { ...c, count: c.count + 1 } : c
 );
 }
-
 return [...prev, { ...card, count: 1 }];
 });
 };
@@ -315,15 +250,12 @@ return [...prev, { ...card, count: 1 }];
 const openStarterPack = () => {
 const randomCard =
 marketCards[Math.floor(Math.random() * marketCards.length)];
-
 addCardToCollection(randomCard);
 };
 
 const sellCard = (card: CollectionItem) => {
 const sellPrice = getSellPrice(card.rarity);
-
 setBalance((prev) => prev + sellPrice);
-
 setCollection((prev) =>
 prev
 .map((c) => (c.id === card.id ? { ...c, count: c.count - 1 } : c))
@@ -366,7 +298,7 @@ addCardToCollection({
 id: randomLegend.id,
 serial: "LEGEND-W",
 name: randomLegend.name,
-image: randomLegend.image || "",
+image: "",
 rarity: "Legend",
 color: "#ffcc00",
 });
@@ -376,13 +308,11 @@ return;
 
 const rewardPool = marketCards.filter((c) => c.rarity === nextRarity);
 const reward = rewardPool[Math.floor(Math.random() * rewardPool.length)];
-
 addCardToCollection(reward);
 };
 
 const addToHallOfFame = (legendId: string) => {
 if (hallOfFame.includes(legendId)) return;
-
 setHallOfFame((prev) => [...prev, legendId]);
 };
 
@@ -500,7 +430,7 @@ display: block;
 .legend-placeholder {
 height: 285px;
 background:
-radial-gradient(circle at center, rgba(255,204,0,0.12), transparent 45%),
+radial-gradient(circle at center, rgba(255,204,0,0.13), transparent 45%),
 linear-gradient(180deg, #181818, #050505);
 display: flex;
 align-items: center;
@@ -595,64 +525,88 @@ margin: 0;
 line-height: 1.45;
 }
 
-.hall-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
+.hall-row {
+display: flex;
+flex-direction: column;
 gap: 12px;
-margin-bottom: 24px;
+padding-bottom: 24px;
 }
 
-.hall-slot {
-min-height: 190px;
-border-radius: 22px;
-padding: 14px;
-background:
-radial-gradient(circle at top, rgba(255,204,0,0.12), transparent 40%),
-linear-gradient(180deg, #121212, #050505);
-border: 1px solid rgba(255,204,0,0.28);
+.hof-card {
 position: relative;
+min-height: 126px;
+border-radius: 24px;
+padding: 16px;
 overflow: hidden;
-}
-
-.hall-slot.locked {
-opacity: 0.72;
-filter: grayscale(0.35);
-}
-
-.hall-silhouette {
-height: 88px;
-margin-bottom: 12px;
-border-radius: 18px;
 background:
-radial-gradient(circle at center, rgba(255,255,255,0.12), transparent 48%),
-#080808;
+radial-gradient(circle at right, rgba(255,204,0,0.16), transparent 35%),
+linear-gradient(135deg, #151515, #050505);
+border: 1px solid rgba(255,204,0,0.28);
+display: flex;
+align-items: center;
+gap: 16px;
+box-shadow: 0 12px 30px rgba(0,0,0,0.42);
+}
+
+.hof-card.unlocked {
+border-color: rgba(255,204,0,0.85);
+box-shadow: 0 0 28px rgba(255,204,0,0.18);
+}
+
+.hof-silhouette {
+width: 82px;
+min-width: 82px;
+height: 94px;
+border-radius: 20px;
+background:
+radial-gradient(circle at center, rgba(255,255,255,0.12), transparent 47%),
+linear-gradient(180deg, #222, #060606);
+border: 1px solid rgba(255,204,0,0.18);
 display: flex;
 align-items: center;
 justify-content: center;
-color: rgba(255,255,255,0.14);
-font-size: 48px;
+font-size: 42px;
+color: rgba(255,255,255,0.16);
 }
 
-.hall-name {
-font-size: 14px;
-line-height: 1.2;
-font-weight: 900;
-color: #fff;
+.hof-info {
+flex: 1;
+min-width: 0;
 }
 
-.hall-status {
-margin-top: 8px;
+.hof-kicker {
 color: #ffcc00;
 font-size: 11px;
 font-weight: 900;
+letter-spacing: 2px;
+margin-bottom: 6px;
 }
 
-.lock {
+.hof-name {
+font-size: 20px;
+font-weight: 900;
+line-height: 1.05;
+margin-bottom: 6px;
+}
+
+.hof-country {
+color: #999;
+font-size: 13px;
+font-weight: 800;
+}
+
+.hof-lock {
 position: absolute;
-right: 12px;
-top: 12px;
-font-size: 18px;
-opacity: 0.85;
+right: 14px;
+top: 14px;
+font-size: 20px;
+}
+
+.hof-status {
+margin-top: 10px;
+color: #ffcc00;
+font-size: 12px;
+font-weight: 900;
 }
 
 .tournament-list {
@@ -785,7 +739,7 @@ hallOfFame={hallOfFame}
 t={t}
 />
 
-<div className="swipe-hint">{t.swipeCards}</div>
+<div className="swipe-hint">← swipe cards →</div>
 </div>
 )}
 
@@ -811,7 +765,7 @@ hallOfFame={hallOfFame}
 t={t}
 />
 
-<div className="swipe-hint">{t.swipeCollection}</div>
+<div className="swipe-hint">← swipe collection →</div>
 
 <HallOfFameWomen
 collection={collection}
@@ -864,7 +818,7 @@ addCardToCollection(card);
 ))}
 </div>
 
-<div className="swipe-hint">{t.swipeMarket}</div>
+<div className="swipe-hint">← swipe market →</div>
 </div>
 )}
 
@@ -879,29 +833,17 @@ addCardToCollection(card);
 </div>
 
 <div className="tournament-list">
-{tournaments.map((tour) => (
-<div
-key={tour.id}
-className="tournament-card"
-style={{
-borderColor: tour.color,
-boxShadow: `0 0 26px ${tour.color}22`,
-}}
->
-<div className="tournament-status">
-{tour.status === "liveSoon" ? t.liveSoon : t.comingSoon}
-</div>
+<div className="tournament-card">
+<div className="tournament-status">{t.liveSoon}</div>
 
-<h3 className="tournament-title">{tour.title}</h3>
+<h3 className="tournament-title">World Cup Fantasy</h3>
 
 <div className="tournament-info">
-📍 {t.location}: {tour.location}
+📍 World Aquatics
 <br />
-🗓 {t.dates}: {tour.dates}
+🗓 October 2026
 <br />
-🏆 {t.prizePool}: {tour.prize}
-<br />
-👑 {t.legendPrize}: Hall of Fame Women
+🏆 10 000 SS + Legend Card
 </div>
 
 <button
@@ -911,7 +853,27 @@ onClick={() => alert(t.enterTeam)}
 {t.enterTeam}
 </button>
 </div>
-))}
+
+<div className="tournament-card">
+<div className="tournament-status">{t.comingSoon}</div>
+
+<h3 className="tournament-title">NCAA Championship</h3>
+
+<div className="tournament-info">
+📍 USA
+<br />
+🗓 March 2026
+<br />
+🏆 7 500 SS + Legend Card
+</div>
+
+<button
+className="btn btn-gold"
+onClick={() => alert(t.enterTeam)}
+>
+{t.enterTeam}
+</button>
+</div>
 </div>
 </div>
 )}
@@ -1063,11 +1025,13 @@ return (
 <>
 <div className="hall-intro">
 <p className="vault-kicker">LEGEND COLLECTION</p>
-<h2 className="vault-title">{t.hallOfFameWomen}</h2>
+
+<h2 className="vault-title">{t.hallTitle}</h2>
+
 <p className="vault-subtitle">{t.hallText}</p>
 </div>
 
-<div className="hall-grid">
+<div className="hall-row">
 {legendWomen.map((legend) => {
 const ownedLegend = collection.find(
 (card) => card.id === legend.id && card.rarity === "Legend"
@@ -1078,29 +1042,37 @@ const inHall = hallOfFame.includes(legend.id);
 return (
 <div
 key={legend.id}
-className={`hall-slot ${!inHall ? "locked" : ""}`}
+className={`hof-card ${inHall ? "unlocked" : ""}`}
 >
-{!inHall && <div className="lock">🔒</div>}
+{!inHall && <div className="hof-lock">🔒</div>}
 
-<div className="hall-silhouette">
+<div className="hof-silhouette">
 {inHall ? "★" : "?"}
 </div>
 
-<div className="hall-name">{legend.name}</div>
+<div className="hof-info">
+<div className="hof-kicker">
+{inHall ? t.unlocked : t.locked}
+</div>
 
-<div className="hall-status">
-{inHall ? t.inHall : t.locked}
+<div className="hof-name">{legend.name}</div>
+
+<div className="hof-country">{legend.country}</div>
+
+<div className="hof-status">
+{inHall ? t.inHall : "Legend Slot"}
 </div>
 
 {ownedLegend && !inHall && (
 <button
 className="btn btn-gold"
-style={{ marginTop: 12 }}
+style={{ marginTop: 10 }}
 onClick={() => addToHallOfFame(legend.id)}
 >
 {t.addToHall}
 </button>
 )}
+</div>
 </div>
 );
 })}
